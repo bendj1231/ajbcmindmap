@@ -450,8 +450,8 @@ export const LandingPage: React.FC<Props> = ({ onNavigate, onSelectProject, onAd
                                            <span className="text-[10px] font-bold uppercase text-emerald-600 tracking-wider">{proj.location}</span>
                                        </div>
                                    </div>
-                                   <div className="bg-emerald-100 text-emerald-800 p-2 rounded-full">
-                                       <ArchiveBoxIcon className="w-5 h-5" />
+                                   <div className="bg-emerald-50 border border-emerald-100 text-emerald-800 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                                       Dec 2023
                                    </div>
                                </div>
 
