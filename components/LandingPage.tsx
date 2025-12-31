@@ -35,7 +35,10 @@ import {
   ExclamationTriangleIcon,
   ArrowTrendingUpIcon,
   CheckBadgeIcon,
-  ArchiveBoxIcon
+  ArchiveBoxIcon,
+  BuildingLibraryIcon,
+  UserCircleIcon,
+  MagnifyingGlassIcon
 } from '@heroicons/react/24/outline';
 import { ViewState } from '../types';
 import { getProjectData, getCompanyOverviewData, ALAN_CLARKE_IMG, ZOHIB_HABIB_IMG, IAN_BARTLETT_IMG, ANDREW_BOWLER_IMG, CONTACT_DIRECTORY } from '../utils/mindMapUtils';
@@ -90,6 +93,24 @@ export const LandingPage: React.FC<Props> = ({ onNavigate, onSelectProject, onAd
   const arbitrationProjects = projects.filter(p => p.engagementType === 'Arbitration' && p.status !== 'Completed');
   const claimsProjects = projects.filter(p => p.engagementType === 'Claim' && p.status !== 'Completed');
   const completedProjects = projects.filter(p => p.status === 'Completed');
+
+  // --- ORGANIZE CONTACTS FOR INBOX VIEW ---
+  // Flatten all contacts first
+  const allContacts = [
+    ...CONTACT_DIRECTORY.expertWitnesses.contacts,
+    ...CONTACT_DIRECTORY.ajbStaff.contacts,
+    ...CONTACT_DIRECTORY.externalContacts.contacts
+  ];
+
+  // Bucket them into the specific requested categories
+  const contactGroups = {
+    legal: allContacts.filter(c => c.title.includes('Lawyer') || c.title.includes('Counsel')),
+    quantum: allContacts.filter(c => c.title.includes('Quantum')),
+    delay: allContacts.filter(c => c.title.includes('Delay')),
+    forensic: allContacts.filter(c => c.title.includes('Forensic') || c.title.includes('Disruption')),
+    ajb: allContacts.filter(c => c.company === 'AJBowler Consult' && !c.title.includes('Quantum') && !c.title.includes('Delay') && !c.title.includes('Forensic')),
+    previous: allContacts.filter(c => c.company !== 'AJBowler Consult' && !c.title.includes('Lawyer') && !c.title.includes('Counsel'))
+  };
 
   if (!activeProject) {
     return (
@@ -282,55 +303,58 @@ export const LandingPage: React.FC<Props> = ({ onNavigate, onSelectProject, onAd
                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                        {arbitrationProjects.map((proj) => {
                           const isHovered = hoveredProjectId === proj.id;
                           return (
                             <div 
                                key={proj.id} 
                                onClick={() => handleManageSquad(proj.id)} // Whole card is clickable
-                               className={`relative bg-white border-2 rounded-[3rem] transition-all duration-500 overflow-hidden flex flex-col cursor-pointer ${isHovered ? 'shadow-2xl border-red-800 -translate-y-2' : 'border-red-100 shadow-sm'}`}
+                               className={`relative bg-white border-2 rounded-3xl transition-all duration-500 overflow-hidden flex flex-col cursor-pointer ${isHovered ? 'shadow-xl border-red-800 -translate-y-1' : 'border-red-100 shadow-sm'}`}
                                onMouseEnter={() => setHoveredProjectId(proj.id)}
                                onMouseLeave={() => setHoveredProjectId(null)}
                             >
                                {/* Arbitration Header Strip */}
-                               <div className="bg-red-800 text-white text-[10px] font-black uppercase tracking-[0.2em] py-2 text-center shrink-0">
+                               <div className="bg-red-800 text-white text-[9px] font-black uppercase tracking-[0.2em] py-1.5 text-center shrink-0">
                                    Formal Dispute Resolution
                                </div>
 
-                               <div className="p-8 flex-1 flex flex-col">
-                                  <div className="flex justify-between items-start mb-8">
+                               <div className="p-5 flex-1 flex flex-col">
+                                  <div className="flex justify-between items-start mb-4">
                                      <div>
-                                        <h3 className="text-2xl font-bold text-slate-900 mb-1">{proj.name}</h3>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <MapPinIcon className="w-4 h-4 text-red-700" />
-                                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.1em]">{proj.location}</span>
+                                        <h3 className="text-lg font-bold text-slate-900 mb-0.5">{proj.name}</h3>
+                                        <div className="flex items-center gap-1.5 mt-0.5">
+                                            <MapPinIcon className="w-3 h-3 text-red-700" />
+                                            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.1em]">{proj.location}</span>
                                         </div>
                                      </div>
-                                     <span className="px-3 py-1 rounded-full text-[10px] font-black tracking-widest bg-red-50 text-red-800 border border-red-100">
-                                        TRIBUNAL ACTIVE
+                                     <span className="px-2 py-0.5 rounded-full text-[9px] font-black tracking-widest bg-red-50 text-red-800 border border-red-100">
+                                        ACTIVE
                                      </span>
                                   </div>
 
-                                  <div className="space-y-8 flex-1 flex flex-col">
-                                     <div className="flex -space-x-4">
-                                        <ContactAvatar img={ANDREW_BOWLER_IMG} role="LEAD EXPERT" color="bg-red-800" active={isHovered} />
-                                        <ContactAvatar img={IAN_BARTLETT_IMG} role="DELAY" color="bg-slate-700" active={isHovered} />
-                                        <ContactAvatar img={proj.id === 'p2' ? ZOHIB_HABIB_IMG : ALAN_CLARKE_IMG} role="QUANTUM" color="bg-slate-700" active={isHovered} />
+                                  <div className="space-y-4 flex-1 flex flex-col">
+                                     <div className="flex -space-x-3">
+                                        <ContactAvatar img={ANDREW_BOWLER_IMG} role="LEAD EXPERT" color="bg-red-800" active={isHovered} size="w-10 h-10" />
+                                        <ContactAvatar img={IAN_BARTLETT_IMG} role="DELAY" color="bg-slate-700" active={isHovered} size="w-10 h-10" />
+                                        <ContactAvatar img={proj.id === 'p2' ? ZOHIB_HABIB_IMG : ALAN_CLARKE_IMG} role="QUANTUM" color="bg-slate-700" active={isHovered} size="w-10 h-10" />
                                      </div>
                                      
-                                     <div className="flex flex-col gap-4 flex-1">
+                                     <div className="flex flex-col gap-2 flex-1">
                                         {/* Detailed Expertise Tags from Project Data */}
-                                        <div className="flex flex-wrap gap-2 content-start">
-                                            {proj.expertise?.map((skill, idx) => (
+                                        <div className="flex flex-wrap gap-1 content-start">
+                                            {proj.expertise?.slice(0, 3).map((skill, idx) => (
                                                 <RoleTag key={idx} label={skill} color="text-red-900 bg-red-100 border-red-200" />
                                             ))}
+                                            {proj.expertise && proj.expertise.length > 3 && (
+                                                <span className="text-[9px] text-slate-400 self-center">+{proj.expertise.length - 3}</span>
+                                            )}
                                         </div>
                                      </div>
 
-                                     <div className="flex justify-end mt-auto pt-4">
-                                        <div className="p-3 bg-red-900 text-white rounded-2xl shadow-lg transition-transform group-hover:scale-105">
-                                           <ScaleIcon className="w-5 h-5" />
+                                     <div className="flex justify-end mt-auto pt-2">
+                                        <div className="p-2 bg-red-900 text-white rounded-xl shadow-lg transition-transform group-hover:scale-105">
+                                           <ScaleIcon className="w-4 h-4" />
                                         </div>
                                      </div>
                                   </div>
@@ -354,60 +378,63 @@ export const LandingPage: React.FC<Props> = ({ onNavigate, onSelectProject, onAd
                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                    {claimsProjects.map((proj) => {
                       const isHovered = hoveredProjectId === proj.id;
                       return (
                         <div 
                            key={proj.id} 
                            onClick={() => handleManageSquad(proj.id)} // Whole card is clickable
-                           className={`relative bg-white border-2 rounded-[3rem] transition-all duration-500 overflow-hidden flex flex-col cursor-pointer ${isHovered ? 'shadow-2xl border-orange-500 -translate-y-2' : 'border-slate-100 shadow-sm'}`}
+                           className={`relative bg-white border-2 rounded-3xl transition-all duration-500 overflow-hidden flex flex-col cursor-pointer ${isHovered ? 'shadow-xl border-orange-500 -translate-y-1' : 'border-slate-100 shadow-sm'}`}
                            onMouseEnter={() => setHoveredProjectId(proj.id)}
                            onMouseLeave={() => setHoveredProjectId(null)}
                         >
-                           <div className="p-8 flex-1 flex flex-col">
-                              <div className="flex justify-between items-start mb-8">
+                           <div className="p-5 flex-1 flex flex-col">
+                              <div className="flex justify-between items-start mb-4">
                                  <div>
-                                    <h3 className="text-2xl font-bold text-slate-900 mb-1">{proj.name}</h3>
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <MapPinIcon className="w-4 h-4 text-orange-500" />
-                                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.1em]">{proj.location}</span>
+                                    <h3 className="text-lg font-bold text-slate-900 mb-0.5">{proj.name}</h3>
+                                    <div className="flex items-center gap-1.5 mt-0.5">
+                                        <MapPinIcon className="w-3 h-3 text-orange-500" />
+                                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.1em]">{proj.location}</span>
                                     </div>
                                  </div>
-                                 <span className={`px-3 py-1 rounded-full text-[10px] font-black tracking-widest ${proj.status === 'Active' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-50 text-slate-500 border border-slate-100'}`}>
+                                 <span className={`px-2 py-0.5 rounded-full text-[9px] font-black tracking-widest ${proj.status === 'Active' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-50 text-slate-500 border border-slate-100'}`}>
                                     {proj.status.toUpperCase()}
                                  </span>
                               </div>
 
-                              <div className="space-y-8 flex-1 flex flex-col">
-                                 <div className="flex -space-x-4">
-                                    <ContactAvatar img={ANDREW_BOWLER_IMG} role="OVERSIGHT" color="bg-orange-500" active={isHovered} />
-                                    <ContactAvatar img={IAN_BARTLETT_IMG} role="DELAY" color="bg-indigo-500" active={isHovered} />
-                                    <ContactAvatar img={proj.id === 'p2' ? ZOHIB_HABIB_IMG : ALAN_CLARKE_IMG} role="QUANTUM" color="bg-emerald-600" active={isHovered} />
+                              <div className="space-y-4 flex-1 flex flex-col">
+                                 <div className="flex -space-x-3">
+                                    <ContactAvatar img={ANDREW_BOWLER_IMG} role="OVERSIGHT" color="bg-orange-500" active={isHovered} size="w-10 h-10" />
+                                    <ContactAvatar img={IAN_BARTLETT_IMG} role="DELAY" color="bg-indigo-500" active={isHovered} size="w-10 h-10" />
+                                    <ContactAvatar img={proj.id === 'p2' ? ZOHIB_HABIB_IMG : ALAN_CLARKE_IMG} role="QUANTUM" color="bg-emerald-600" active={isHovered} size="w-10 h-10" />
                                  </div>
                                  
-                                 <div className="flex flex-col gap-4 flex-1">
+                                 <div className="flex flex-col gap-2 flex-1">
                                      {/* Detailed Expertise Tags */}
-                                     <div className="flex flex-wrap gap-2 content-start">
-                                         {proj.expertise?.map((skill, idx) => (
+                                     <div className="flex flex-wrap gap-1 content-start">
+                                         {proj.expertise?.slice(0, 3).map((skill, idx) => (
                                              <RoleTag key={idx} label={skill} color="text-slate-700 bg-slate-50 border-slate-200" />
                                          ))}
+                                         {proj.expertise && proj.expertise.length > 3 && (
+                                              <span className="text-[9px] text-slate-400 self-center">+{proj.expertise.length - 3}</span>
+                                         )}
                                      </div>
                                      
                                      {/* Escalation Button */}
-                                     <div className="mt-auto pt-2">
+                                     <div className="mt-auto pt-1">
                                         <button 
                                             onClick={(e) => handleEscalateToArbitration(e, proj.id)}
-                                            className="text-[10px] font-bold text-red-500 hover:text-red-700 flex items-center gap-1 transition-colors px-1"
+                                            className="text-[9px] font-bold text-red-500 hover:text-red-700 flex items-center gap-1 transition-colors px-1"
                                         >
-                                            <ArrowTrendingUpIcon className="w-3 h-3" /> Escalate to Arbitration
+                                            <ArrowTrendingUpIcon className="w-3 h-3" /> Escalate
                                         </button>
                                      </div>
                                  </div>
 
-                                 <div className="flex justify-end pt-2">
-                                    <div className="p-3 bg-slate-900 text-white rounded-2xl shadow-lg transition-transform group-hover:scale-105">
-                                       <BoltIcon className="w-5 h-5" />
+                                 <div className="flex justify-end pt-1">
+                                    <div className="p-2 bg-slate-900 text-white rounded-xl shadow-lg transition-transform group-hover:scale-105">
+                                       <BoltIcon className="w-4 h-4" />
                                     </div>
                                  </div>
                               </div>
@@ -476,52 +503,20 @@ export const LandingPage: React.FC<Props> = ({ onNavigate, onSelectProject, onAd
                  </div>
              )}
 
-             {/* 2. THE CONTACTS LIST (GLOBAL EXPERT REGISTRY) */}
-             <div className="w-full mb-16 space-y-12">
-                {Object.values(CONTACT_DIRECTORY).map((category, index) => (
-                  <div key={index}>
-                      <div className="flex items-center gap-4 mb-6 px-4">
-                         <div className="p-2 bg-slate-900 rounded-xl text-white shadow-lg shadow-slate-200">
-                            <UserGroupIcon className="w-5 h-5" />
-                         </div>
-                         <div>
-                            <h2 className="text-xl font-black text-slate-900 tracking-tight uppercase">{category.title}</h2>
-                         </div>
-                         <div className="h-px bg-slate-200 flex-1 ml-4"></div>
-                      </div>
+             {/* 4. GLOBAL NETWORK & EXPERT DIRECTORY (UNIFIED INBOX STYLE) */}
+             <div className="w-full mb-16">
+                <div className="flex items-center gap-4 mb-8 px-4">
+                    <div className="p-3 bg-indigo-900 rounded-2xl text-white shadow-lg shadow-slate-300">
+                        <UserGroupIcon className="w-8 h-8" />
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-black text-slate-900 tracking-tight uppercase">Global Network & Expert Directory</h2>
+                        <p className="text-xs text-indigo-900 font-bold uppercase tracking-widest">Unified Contact Network</p>
+                    </div>
+                </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4">
-                         {category.contacts.map((contact) => (
-                            <div key={contact.id} className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col items-center text-center hover:shadow-xl hover:border-slate-300 transition-all duration-300 transform hover:-translate-y-1">
-                                <img src={contact.img} alt={contact.name} className="w-24 h-24 rounded-full mb-4 object-cover ring-4 ring-slate-100" />
-                                <h4 className="font-bold text-slate-800">{contact.name}</h4>
-                                <p className="text-xs text-slate-500 mb-1">{contact.title}</p>
-                                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{contact.company}</p>
-
-                                {contact.priorProjects && (
-                                    <div className="mt-3 text-left w-full px-1">
-                                        <div className="flex items-start gap-2 text-slate-500">
-                                            <BriefcaseIcon className="w-4 h-4 mt-0.5 shrink-0" />
-                                            <p className="text-[11px] leading-snug">
-                                                {contact.priorProjects}
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="mt-4 pt-4 border-t border-slate-100 w-full flex justify-center gap-2">
-                                    <a href={`mailto:${contact.email}`} className="p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 transition-colors" title="Send Email">
-                                        <EnvelopeIcon className="w-4 h-4" />
-                                    </a>
-                                    <a href={`tel:${contact.phone}`} className="p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 transition-colors" title="Call">
-                                        <PhoneIcon className="w-4 h-4" />
-                                    </a>
-                                </div>
-                            </div>
-                         ))}
-                      </div>
-                  </div>
-                ))}
+                {/* Directory Component Inline */}
+                <DirectoryComponent groups={contactGroups} />
              </div>
 
              <div className="w-full h-px bg-slate-200 my-16"></div>
@@ -530,9 +525,90 @@ export const LandingPage: React.FC<Props> = ({ onNavigate, onSelectProject, onAd
   );
 };
 
-const ContactAvatar: React.FC<{ img: string; role: string; color: string; active?: boolean }> = ({ img, role, color, active }) => (
+const DirectoryComponent = ({ groups }: { groups: any }) => {
+    const [search, setSearch] = useState('');
+
+    const categoryLabels: Record<string, string> = {
+        legal: "Appointed Lawyers",
+        quantum: "Quantum Experts",
+        delay: "Delay Analysts",
+        forensic: "Forensic & Disruption",
+        ajb: "AJBowler Consult",
+        previous: "Previous Engagements"
+    };
+
+    return (
+        <div className="w-full bg-white border border-slate-200 rounded-[2.5rem] shadow-xl overflow-hidden flex flex-col">
+            {/* Header / Search */}
+            <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/50">
+                <div>
+                     <h2 className="text-lg font-black text-slate-800 uppercase tracking-tight">Expert Registry</h2>
+                </div>
+                <div className="relative w-full md:w-96">
+                    <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input 
+                        type="text" 
+                        placeholder="Search by name, role, or company..." 
+                        className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow shadow-sm"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
+            </div>
+
+            {/* List Content */}
+            <div className="flex-1 overflow-y-auto max-h-[800px] p-8 bg-white">
+                <div className="space-y-10">
+                    {Object.entries(groups).map(([key, contacts]: [string, any[]]) => {
+                        const filtered = contacts.filter((c: any) => 
+                            c.name.toLowerCase().includes(search.toLowerCase()) || 
+                            c.title.toLowerCase().includes(search.toLowerCase()) ||
+                            c.company.toLowerCase().includes(search.toLowerCase())
+                        );
+
+                        if (filtered.length === 0) return null;
+
+                        return (
+                            <div key={key}>
+                                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-2 flex items-center justify-between">
+                                    <span>{categoryLabels[key] || key}</span>
+                                    <span className="bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full text-[10px]">{filtered.length}</span>
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {filtered.map((contact: any) => (
+                                        <div key={contact.id} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-200 transition-all group cursor-default">
+                                            <img src={contact.img} alt={contact.name} className="w-14 h-14 rounded-full object-cover border-2 border-slate-100 shadow-sm" />
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="text-sm font-bold text-slate-900 truncate">{contact.name}</h4>
+                                                <p className="text-xs text-slate-500 truncate font-medium">{contact.title}</p>
+                                                <p className="text-[10px] text-slate-400 uppercase tracking-wider truncate mt-0.5">{contact.company}</p>
+                                            </div>
+                                            <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                 <a href={`mailto:${contact.email}`} className="p-1.5 bg-white border border-slate-200 rounded-full text-slate-400 hover:text-indigo-600 hover:border-indigo-200 shadow-sm" title="Email"><EnvelopeIcon className="w-3.5 h-3.5"/></a>
+                                                 <a href={`tel:${contact.phone}`} className="p-1.5 bg-white border border-slate-200 rounded-full text-slate-400 hover:text-green-600 hover:border-green-200 shadow-sm" title="Call"><PhoneIcon className="w-3.5 h-3.5"/></a>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })}
+                     {/* Empty State */}
+                     {Object.values(groups).every((g: any) => g.filter((c:any) => c.name.toLowerCase().includes(search.toLowerCase())).length === 0) && (
+                         <div className="text-center py-16 text-slate-400">
+                             <UserGroupIcon className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                             <p>No contacts found matching "{search}"</p>
+                         </div>
+                     )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+const ContactAvatar: React.FC<{ img: string; role: string; color: string; active?: boolean; size?: string }> = ({ img, role, color, active, size = "w-14 h-14" }) => (
     <div className="group/av relative flex flex-col items-center">
-        <div className={`w-14 h-14 rounded-full border-[3px] border-white ${color} overflow-hidden shadow-xl transition-all duration-500 ${active ? 'scale-110 rotate-3 ring-4 ring-white' : ''}`}>
+        <div className={`${size} rounded-full border-[3px] border-white ${color} overflow-hidden shadow-xl transition-all duration-500 ${active ? 'scale-110 rotate-3 ring-4 ring-white' : ''}`}>
             <img src={img} alt={role} className="w-full h-full object-cover" />
         </div>
         <div className="absolute -bottom-2 bg-slate-900 text-white text-[8px] font-black px-2 py-0.5 rounded shadow-lg opacity-0 group-hover/av:opacity-100 transition-opacity z-10">
