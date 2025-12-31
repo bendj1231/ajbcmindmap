@@ -112,8 +112,8 @@ export const CONTACT_DIRECTORY = {
     title: 'AJBowler Consult Contacts',
     contacts: [
       { id: 'c5', name: 'Andrew Bowler', title: 'Managing Director', company: 'AJBowler Consult', email: 'ajb@ajbowler.com', phone: '+44 7700 900001', img: ANDREW_BOWLER_IMG },
-      { id: 'c6', name: 'Jane Doe', title: 'Office Manager', company: 'AJBowler Consult', email: 'j.doe@ajbowler.com', phone: '+44 7700 900111', img: 'https://i.pravatar.cc/150?u=janedoe' },
-      { id: 'c7', name: 'John Smith', title: 'Junior QS', company: 'AJBowler Consult', email: 'j.smith@ajbowler.com', phone: '+44 7700 900222', img: 'https://i.pravatar.cc/150?u=johnsmith' },
+      { id: 'c6', name: 'Monica Bowler', title: 'Office Manager', company: 'AJBowler Consult', email: 'm.bowler@ajbowler.com', phone: '+44 7700 900111', img: 'https://i.pravatar.cc/150?u=monicabowler' },
+      { id: 'c7', name: 'Benjamin Bowler', title: 'Junior QS', company: 'AJBowler Consult', email: 'b.bowler@ajbowler.com', phone: '+44 7700 900222', img: 'https://i.pravatar.cc/150?u=benjaminbowler' },
     ]
   },
   externalContacts: {
