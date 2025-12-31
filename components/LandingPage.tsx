@@ -1,40 +1,21 @@
 import React, { useState } from 'react';
 import { 
   BuildingOfficeIcon,
-  CommandLineIcon,
-  Squares2X2Icon,
-  ArrowRightIcon,
-  ChevronLeftIcon,
-  ClockIcon,
-  ShareIcon,
   FolderOpenIcon,
+  ChevronLeftIcon,
+  MapPinIcon,
+  ScaleIcon,
   UserGroupIcon,
   EnvelopeIcon,
   BriefcaseIcon,
   PhoneIcon,
-  MapPinIcon,
-  XMarkIcon,
-  CheckCircleIcon,
-  ScaleIcon,
-  ShieldCheckIcon,
-  DocumentMagnifyingGlassIcon,
-  BanknotesIcon,
-  UserPlusIcon,
-  WrenchScrewdriverIcon,
-  IdentificationIcon,
-  InformationCircleIcon,
   GlobeAltIcon,
-  BeakerIcon,
-  AcademicCapIcon,
+  ArrowRightIcon,
   ChartBarIcon,
-  SparklesIcon,
-  CurrencyDollarIcon,
-  ArrowsPointingOutIcon,
-  MagnifyingGlassPlusIcon,
-  BoltIcon,
   ExclamationTriangleIcon,
   ArrowTrendingUpIcon,
   CheckBadgeIcon,
+  BoltIcon,
   ArchiveBoxIcon
 } from '@heroicons/react/24/outline';
 import { ViewState } from '../types';
@@ -48,6 +29,7 @@ interface Project {
   engagementType: 'Claim' | 'Arbitration';
   progress: number;
   expertise?: string[];
+  completionDate?: string;
 }
 
 interface Props {
@@ -451,7 +433,7 @@ export const LandingPage: React.FC<Props> = ({ onNavigate, onSelectProject, onAd
                                        </div>
                                    </div>
                                    <div className="bg-emerald-50 border border-emerald-100 text-emerald-800 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">
-                                       Dec 2023
+                                       {proj.completionDate || 'Dec 2023'}
                                    </div>
                                </div>
 

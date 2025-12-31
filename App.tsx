@@ -24,6 +24,7 @@ export interface ProjectData {
   engagementType: 'Claim' | 'Arbitration';
   progress: number;
   expertise?: string[];
+  completionDate?: string;
 }
 
 const INITIAL_PROJECTS: ProjectData[] = [
@@ -76,7 +77,8 @@ const INITIAL_PROJECTS: ProjectData[] = [
     expertise: [
       'Final Account Negotiation',
       'Defect Liability Management'
-    ] 
+    ],
+    completionDate: 'Oct 2022'
   },
   { 
     id: 'p5', 
@@ -88,7 +90,8 @@ const INITIAL_PROJECTS: ProjectData[] = [
     expertise: [
       'Expert Witness Testimony',
       'Quantum Determination'
-    ] 
+    ],
+    completionDate: 'Jan 2021'
   },
 ];
 

@@ -140,7 +140,7 @@ export const getProjectData = (pid: string, projectType: string = 'Claim') => {
           label: `${projectName} - Arbitration`,
           sub: "Tribunal Strategy Layout",
           nodes: [
-             { id: 'root', label: 'ICC Arbitration', type: 'root', x: 600, y: 450, icon: ScaleIcon, color: 'bg-red-700', description: 'Central Legal & Expert Hub' },
+             { id: 'root', label: pid === 'p5' ? 'Archived Tribunal' : 'ICC Arbitration', type: 'root', x: 600, y: 450, icon: ScaleIcon, color: pid === 'p5' ? 'bg-slate-700' : 'bg-red-700', description: pid === 'p5' ? 'Historical Case Archive (2021)' : 'Central Legal & Expert Hub' },
              
              { id: 'cat_pleadings', label: 'Tribunal & Pleadings', type: 'category', x: 600, y: 150, icon: BookOpenIcon, color: 'bg-slate-800' },
              { id: 'cat_quantum', label: 'Quantum Evidence', type: 'category', x: 200, y: 750, icon: BanknotesIcon, color: 'bg-emerald-700' },
@@ -170,7 +170,7 @@ export const getProjectData = (pid: string, projectType: string = 'Claim') => {
             label: projectName,
             sub: "Asset Claim",
             nodes: [
-                { id: 'root', label: projectName, type: 'root', x: 600, y: 450, icon: BuildingStorefrontIcon, color: 'bg-orange-600', description: 'Logistics Hub Asset Claim.' },
+                { id: 'root', label: pid === 'p4' ? 'Historical Asset Claim' : projectName, type: 'root', x: 600, y: 450, icon: BuildingStorefrontIcon, color: pid === 'p4' ? 'bg-slate-600' : 'bg-orange-600', description: pid === 'p4' ? 'Closed Claim Archive (2022)' : 'Logistics Hub Asset Claim.' },
                 { id: 'cat_contract', label: 'Lease Agreement', type: 'category', x: 600, y: 200, icon: DocumentTextIcon, color: 'bg-slate-700' },
                 { id: 'cat_finance', label: 'Damages', type: 'category', x: 300, y: 650, icon: BanknotesIcon, color: 'bg-emerald-600' },
                 { id: 'cat_events', label: 'Defects', type: 'category', x: 900, y: 650, icon: ExclamationTriangleIcon, color: 'bg-red-500' },
@@ -228,7 +228,7 @@ export const getProjectDetailData = (pid: string, projectType: string = 'Claim')
         const expertLegal = { name: 'Fernando Ortega', role: 'Appointed Lawyer', imageUrl: FERNANDO_ORTEGA_IMG };
 
         const nodes: MapNode[] = [
-            { id: 'root_detail', label: 'Arbitration Workstreams', type: 'root', x: 600, y: 450, icon: ScaleIcon, color: 'bg-red-800', description: 'Tribunal Preparation & Evidence' },
+            { id: 'root_detail', label: 'Arbitration Workstreams', type: 'root', x: 600, y: 450, icon: ScaleIcon, color: pid === 'p5' ? 'bg-slate-800' : 'bg-red-800', description: pid === 'p5' ? 'Archived Tribunal Record' : 'Tribunal Preparation & Evidence' },
             
             { 
               id: 'd_plead', 
@@ -308,7 +308,7 @@ export const getProjectDetailData = (pid: string, projectType: string = 'Claim')
     }
 
     const nodes: MapNode[] = [
-        { id: 'root_detail', label: projectTitle, type: 'root', x: 600, y: 450, icon: BuildingStorefrontIcon, color: (pid === 'p3' || pid === 'p4') ? 'bg-orange-600' : 'bg-red-600', description: 'Internal Project Structure & Work Packages' },
+        { id: 'root_detail', label: projectTitle, type: 'root', x: 600, y: 450, icon: BuildingStorefrontIcon, color: (pid === 'p3' || pid === 'p4') ? 'bg-orange-600' : 'bg-red-600', description: pid === 'p4' ? 'Historical Project Archive' : 'Internal Project Structure & Work Packages' },
         
         { 
           id: 'd_sched', 
